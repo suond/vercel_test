@@ -1,10 +1,36 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 
 function App() {
   const [count, setCount] = useState(0)
+  const [fact, setFact] = useState("")
+
+  useEffect(() => {
+    const fetchBooks = async () => {
+        console.log(import.meta.env.VITE_TEST);
+        console.log(import.meta.env.MODE);
+        const baseUrl = `/api`
+
+        // const url = `${baseUrl}?page=0&size=9`
+        const response = await fetch(baseUrl);
+
+        if (!response.ok) {
+            throw new Error('Something went wrong');
+        }
+
+        const responseJson = await response.json();
+
+        // const responseData = responseJson._embedded.books;
+        setFact(responseJson.fact)
+        console.log(responseJson)
+      }
+      fetchBooks().catch( (error) => {
+        console.log(error)
+      })
+
+}, []);
 
   return (
     <>
@@ -24,7 +50,7 @@ function App() {
         <p>
           Edit <code>src/App.tsx</code> and save to test HMR
         </p>
-        <p> Klee</p>
+        <p> Klee's fact says: <br></br>{fact}</p>
         <p>env value: {`${import.meta.env.VITE_VALUE}`}</p>
       </div>
       <p className="read-the-docs">
